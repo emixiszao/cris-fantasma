@@ -1,0 +1,9 @@
+{
+  "name": "Fantasma - itens não clicáveis",
+  "version": "1.0.0",
+  "manifest_version": 1,
+  "description": "Adiciona ao menu do item a opção Fantasma: o item deixa de ser clicável no mapa e não prende mais os tokens.",
+  "author": "@mestremxrpg no Youtube",
+  "icon": "https://emixiszao.github.io/cris-fantasma/icon.svg",
+  "background_url": "https://emixiszao.github.io/cris-fantasma/background.html"
+}

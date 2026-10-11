@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fantasma - segundo plano</title>
+</head>
+<body>
+<script type="module">
+// Cria, só para o mestre, duas opções no menu que aparece ao selecionar itens:
+//  - "Fantasma": liga disableHit (o item deixa de ser clicável e de interferir nos tokens)
+//  - "Tornar clicável": desliga disableHit
+import OBR from "https://esm.sh/@owlbear-rodeo/sdk@3";
+
+const BASE = new URL(".", location.href).href;
+
+async function definirFantasma(contexto, fantasma) {
+  try {
+    await OBR.scene.items.updateItems(contexto.items, itens => {
+      for (const item of itens) item.disableHit = fantasma;
+    });
+    const n = contexto.items.length;
+    OBR.notification.show(
+      fantasma
+        ? `${n} item(ns) agora ${n === 1 ? "é fantasma" : "são fantasmas"}. Selecione pelo outliner para desfazer.`
+        : `${n} item(ns) clicável(is) de novo.`
+    );
+  } catch (e) {
+    OBR.notification.show("Não foi possível alterar: " + (e?.message ?? e), "ERROR");
+  }
+}
+
+OBR.onReady(() => {
+  // aparece se pelo menos um dos itens selecionados ainda é clicável
+  OBR.contextMenu.create({
+    id: "com.cris.fantasma/ligar",
+    icons: [{
+      icon: BASE + "icon.svg",
+      label: "Fantasma (não clicável)",
+      filter: { roles: ["GM"], some: [{ key: "disableHit", value: true, operator: "!=" }] }
+    }],
+    onClick: contexto => definirFantasma(contexto, true)
+  });
+
+  // aparece se pelo menos um dos itens selecionados é fantasma
+  OBR.contextMenu.create({
+    id: "com.cris.fantasma/desligar",
+    icons: [{
+      icon: BASE + "ghost-off.svg",
+      label: "Tornar clicável",
+      filter: { roles: ["GM"], some: [{ key: "disableHit", value: true }] }
+    }],
+    onClick: contexto => definirFantasma(contexto, false)
+  });
+});
+</script>
+</body>
+</html>
